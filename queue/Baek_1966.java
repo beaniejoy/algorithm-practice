@@ -26,7 +26,7 @@ public class Baek_1966 {
     // 우선순위가 큰 순서부터 뽑기위한 Q
     Queue<Integer> orderQ = new PriorityQueue<Integer>(Collections.reverseOrder());
 
-    // 결과를 넣기위한 array
+    // 결과를 넣기위한 array 생성
     int[] result = new int[numCases];
     int index = 0;
 
