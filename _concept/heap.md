@@ -25,8 +25,10 @@ public class Heap {
   // 실제 heap에 있는 데이터 개
   private int size;
 
+  private static final int MAX_SIZE = 10001;
+
   public Heap() {
-    array = new int[10001];
+    array = new int[MAX_SIZE];
     size = 0;
   }
   /**
