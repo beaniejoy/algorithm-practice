@@ -35,3 +35,32 @@
   - 방향만 가능
   - 루트 노드 존재
   - 부모, 자식 관계 존재
+
+## 그래프 표현 방식
+
+### Adjacency Matrix
+
+<img width="855" alt="스크린샷 2021-08-22 오전 12 24 19" src="https://user-images.githubusercontent.com/41675375/130327298-4142c0aa-b1c2-4a21-975f-84853c8f9d8c.png">
+
+```java
+public class Graph {
+  private static final int VERTICES_SIZE = 10;
+  private int[][] adjMatrix;
+
+  public Graph() {
+    adjMatrix = new int[VERTICES_SIZE][VERTICES_SIZE];
+  }
+
+  // ...
+
+}
+```
+- `adj[A][B] = 1`: `(A, B)` or `<A, B>`
+- `adj[A][B] = 0`: no edge
+
+### Adjacency Lists
+
+<img width="459" alt="스크린샷 2021-08-22 오전 1 17 51" src="https://user-images.githubusercontent.com/41675375/130328265-449648dd-f880-4c15-bf67-32970e00d6c7.png">
+
+
+- Adjacency MultiLists
