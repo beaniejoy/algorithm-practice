@@ -89,7 +89,7 @@ public class Graph {
   public boolean insertEdge(int a, int b) {
     // 같은 노드에 대한 Edge 연결은 허용 X
     if(a == b) 
-			return false;
+      return false;
       
     Node nodeA = adjList[a];
     Node nodeB = adjList[b];
