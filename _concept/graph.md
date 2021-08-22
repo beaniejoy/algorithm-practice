@@ -62,5 +62,98 @@ public class Graph {
 
 <img width="459" alt="스크린샷 2021-08-22 오전 1 17 51" src="https://user-images.githubusercontent.com/41675375/130328265-449648dd-f880-4c15-bf67-32970e00d6c7.png">
 
+```java
+public class Graph {
+  private static final int MAX_VERTICES = 101;
 
-- Adjacency MultiLists
+  private Node[] adjList;
+
+  private int size;
+
+  public Graph() {
+    adjList = new Node[MAX_VERTICES];
+    size = 0;
+  }
+
+  public boolean insertVertex(int vertex) {
+    if(size > MAX_VERTICES)
+      return false;
+    
+    adjList[vertex] = new Node(vertex);
+    size++;
+    return true;
+  }
+
+  // Undirected Graph에 해당
+  // A, B의 LinkedList 둘다 담는다.
+  public boolean insertEdge(int a, int b) {
+    Node nodeA = adjList[a];
+    Node nodeB = adjList[b];
+    
+    if(nodeA == null || nodeB == null)
+      return false;
+    
+    // nodeA의 LinkedList에 NodeB 연결하기
+    Node nextA = nodeA;
+    while(nextA.getNext() != null) {
+      nextA = nextA.getNext();
+      
+      if(nextA.equals(b))
+        return false;
+    }
+    // A의 LinkedList에 넣는 Node의 next는 A와 관련된 Node들이 연결
+    // nodeA를 곧장 넣으면 안된다.
+    nextA.setNext(new Node(b));
+
+    // nodeB의 LinkedList에 NodeA 연결하기
+    Node nextB = nodeB;
+    while(nextB.getNext() != null) {
+      nextB = nextB.getNext();
+      
+      if(nextB.equals(a)) {
+        // B - A 연결 시 
+        // B의 LinkedList 안에 nodeA가 존재하면
+        // 기존의 A의 LinkedList에 넣었던 nodeB정보도 없앤다.
+        nextA.setNext(null);;
+        return false;
+      }
+    }
+    nextB.setNext(new Node(a));;
+    
+    return true;
+  }
+
+  private static class Node {
+    private int vertex;
+    
+    private Node next;
+    
+    Node(int vertex) {
+      this.vertex = vertex;
+      this.next = null;
+    }
+    
+    int getVertex() {
+      return vertex;
+    }
+    
+    void setNext(Node next) {
+      this.next = next;
+    }
+    
+    Node getNext() {
+      return next;
+    }
+
+    boolean equals(int vertex) {
+      if(this.vertex == vertex)
+        return true;
+      else
+        return false;
+    }
+  }
+}
+```
+- Adjacency Lists에서는 `A - B` Edge에 대해 `(A, B)`, `(B, A)` 둘 다 LinkedList에 연결해주어야 한다.
+- LinkedList(next에 해당)에 넣어지는 Node와, adjList에 있는 Node는 다르다.  
+  - adjList에 있는 Node가 연결된 Edge에 대한 LinkedList를 관리
