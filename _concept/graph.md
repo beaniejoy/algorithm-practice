@@ -38,6 +38,9 @@
 
 ## 그래프 표현 방식
 
+- Undirected Graph에 해당
+  (Directed Graph에서는 구현이 달라짐)
+
 ### Adjacency Matrix
 
 <img width="855" alt="스크린샷 2021-08-22 오전 12 24 19" src="https://user-images.githubusercontent.com/41675375/130327298-4142c0aa-b1c2-4a21-975f-84853c8f9d8c.png">
@@ -51,6 +54,14 @@ public class Graph {
     adjMatrix = new int[VERTICES_SIZE][VERTICES_SIZE];
   }
 
+  public boolean insertEdge(int a, int b) {
+    if(adjMatrix[a][b] == 1)
+      return false;
+    
+    // Undirected Graph에 해당
+    adjMatrix[a][b] = 1;
+    adjMatrix[b][a] = 1;
+  }
   // ...
 
 }
@@ -64,19 +75,20 @@ public class Graph {
 
 ```java
 public class Graph {
-  private static final int MAX_VERTICES = 101;
-
   private Node[] adjList;
 
   private int size;
 
-  public Graph() {
-    adjList = new Node[MAX_VERTICES];
+  public Graph(int maxVertices) {
+    adjList = new Node[maxVertices + 1];
     size = 0;
   }
 
   public boolean insertVertex(int vertex) {
-    if(size > MAX_VERTICES)
+    if(size > adjList.length)
+      return false;
+    
+    if(vertex == 0)
       return false;
     
     adjList[vertex] = new Node(vertex);
@@ -90,7 +102,7 @@ public class Graph {
     // 같은 노드에 대한 Edge 연결은 허용 X
     if(a == b) 
       return false;
-      
+    
     Node nodeA = adjList[a];
     Node nodeB = adjList[b];
     
@@ -127,7 +139,12 @@ public class Graph {
     return true;
   }
 
-  private static class Node {
+  public Node[] getAdjList() {
+    return adjList;
+  }
+
+  // 다른 알고리즘 선언된 클래스에서 해당 Node class 사용하기 위해 public 선언
+  public static class Node {
     private int vertex;
     
     private Node next;
@@ -160,4 +177,7 @@ public class Graph {
 ```
 - Adjacency Lists에서는 `A - B` Edge에 대해 `(A, B)`, `(B, A)` 둘 다 LinkedList에 연결해주어야 한다.
 - LinkedList(next에 해당)에 넣어지는 Node와, adjList에 있는 Node는 다르다.  
-  - adjList에 있는 Node가 연결된 Edge에 대한 LinkedList를 관리
+  - `adjList에 있는 Node`가 연결된 Edge에 대한 LinkedList를 관리
+- 위에서 구현한 LinkedList는 next 참조변수만 저장한 형태
+  - java Collection Framework 중 `LinkedList` 사용해도됨
+- `Hash Table`과 비슷한 구조
