@@ -17,8 +17,8 @@ public class DFS {
   // Graph 게시글 참고
   private Graph.Node[] adjList;
 
-  public DFS(Graph graph) {
-    visited = new boolean[Graph.MAX_VERTICES];
+  public DFS(Graph graph, int maxVertices) {
+    visited = new boolean[maxVertices];
     adjList = graph.getAdjList();
   }
 
@@ -63,6 +63,34 @@ public void dfsIterative(int v) {
     while(next != null) {
       if(!visited[next.getVertex()])
         stack.push(next.getVertex());
+      
+      next = next.getNext();
+    }
+  }
+}
+```
+
+## BFS 구현
+
+```java
+public void bfs(int v) {
+  // Queue 사용
+  queue.add(v);
+
+  while(!queue.isEmpty()) {
+    v = queue.poll();
+    
+    if(visited[v])
+      continue;
+    
+    visited[v] = true;
+    
+    System.out.println(v);
+    
+    Graph.Node next = adjList[v].getNext();
+    while(next != null) {
+      if(!visited[next.getVertex()])
+        queue.add(next.getVertex());
       
       next = next.getNext();
     }
