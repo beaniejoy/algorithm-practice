@@ -36,7 +36,7 @@
   - 루트 노드 존재
   - 부모, 자식 관계 존재
 
-## 그래프 표현 방식
+## 그래프 표현 방식(Undirected Graph)
 
 - Undirected Graph에 해당
   (Directed Graph에서는 구현이 달라짐)
@@ -181,3 +181,46 @@ public class Graph {
 - 위에서 구현한 LinkedList는 next 참조변수만 저장한 형태
   - java Collection Framework 중 `LinkedList` 사용해도됨
 - `Hash Table`과 비슷한 구조
+
+
+## Weighted Graph
+
+그래프의 형태에서 각 edge에 weight가 주어진 그래프
+
+<img width="390" alt="스크린샷 2021-08-27 오후 9 39 13" src="https://user-images.githubusercontent.com/41675375/131128606-5cfc7645-f5c3-4720-b8f0-85022a52f3bc.png">
+
+### Adjacency Matrix
+
+```java
+public class Graph {
+
+  private static final int INF = Integer.MAX_VALUE;
+  // ...
+
+  public boolean insertEdge(int a, int b, int w) {
+    if(adjMatrix[a][b] == INF)
+      return false;
+    
+    // weight 추가
+    adjMatrix[a][b] = w;
+    adjMatrix[b][a] = w;
+  }
+
+  // ...
+
+}
+```
+
+### Adjacency Lists
+
+```java
+public static class Node {
+    private int vertex;
+    
+    private int weight;
+
+    private Node next;
+
+    //...
+}
+```
