@@ -41,3 +41,31 @@ public class DFS {
   }
 }
 ```
+
+### Iterative 방법
+
+```java
+public void dfsIterative(int v) {
+  
+  stack.push(v);
+  
+  while(!stack.isEmpty()) {
+    v = stack.pop();
+    
+    if(visited[v])
+      continue;
+    
+    visited[v] = true;
+    
+    System.out.println(String.valueOf(v));
+    
+    Graph.Node next = adjList[v].getNext();
+    while(next != null) {
+      if(!visited[next.getVertex()])
+        stack.push(next.getVertex());
+      
+      next = next.getNext();
+    }
+  }
+}
+```
