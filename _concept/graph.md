@@ -224,3 +224,17 @@ public static class Node {
     //...
 }
 ```
+
+## Connected Components
+
+```java
+void connected() {
+  for(int i = 0; i < n; i++) {
+    if(!visited[i]) {
+      dfs(i);
+      // End of Connected Component
+      System.out.println(String.valueOf(i));
+    }
+  }
+}
+```
