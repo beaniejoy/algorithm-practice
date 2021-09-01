@@ -227,6 +227,8 @@ public static class Node {
 
 ## Connected Components
 
+연결되어 있는 Vertex들의 구성
+
 ```java
 void connected() {
   for(int i = 0; i < n; i++) {
@@ -238,3 +240,9 @@ void connected() {
   }
 }
 ```
+
+## Spanning Tree
+
+- Edges used by BFS, DFS don't make a cycle
+- 노드간 경로가 오직 하나 뿐인 그래프
+- 순환이 없는 그래프
