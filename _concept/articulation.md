@@ -30,3 +30,76 @@ articulation point가 없는 connected graph
 ### Non Root Node
 - tree상 루트노드 이외의 노드들은 조건이 까다롭다.
 - 해당 노드의 자식노드들 중에서 해당 노드의 부모노드로 도달할 수 있는 경로가 없을 때 해당노드는 articulation point 해당
+- 대상 노드(target)에서 그의 부모노드와 자식노드로 나누어서 생각
+  - target보다 자식노드가 그의 부모노드로 target을 거치지않고 우회로 갈 수 있는 길이 있다면 단절점이 아니다.
+  - 우회로 갈 수 없고 target을 거쳐야만 자식노드에서 부모노드로 갈 수 있는 점이라면 단절점에 해당
+
+### 구현
+- Articulation points를 찾기 위한 dfn 로직  
+  (depth-first numbers)
+```java
+// v is the parent of u
+public void dfnlow(int u, int v) {
+  dfn[u] = low[u] = dfsCount++;
+  
+  Graph.Node ptr = adjList[u].getNext();
+  int w;
+  for(; ptr != null; ptr = ptr.getNext()) {
+    w = ptr.getVertex();
+    
+    if(dfn[w] < 0) {
+      dfnlow(w, u);
+      low[u] = min(low[u], low[w]);
+    } else if(w != v)
+      low[u] = min(low[u], dfn[w]);
+  }
+}
+
+private int min(int a, int b) {
+  return a < b ? a: b;
+}
+```
+
+- Articulation point 판별
+```java
+public boolean isArticulation(int u) {
+  Graph.Node ptr = adjList[u].getNext();
+  
+  // DFS tree상 root node일 때
+  if(dfn[u] == 0)
+    return isRootArticulation(u);
+  
+  int w;
+  
+  for(; ptr != null; ptr = ptr.getNext()) {
+    w = ptr.getVertex();
+    // 만약 u에 연결되어 있는 w가 dfs 순서가 더 작으면 w가 부모노드
+    if(dfn[w] < dfn[u])
+      continue;
+    
+    if(low[w] >= dfn[u]) {
+      return true;
+    }
+  }
+  
+  return false;
+}
+// root node일 때 따로 판별
+// root node의 자식노드의 개수가 2이상일 때 단절점 해당(DFS tree 상에서)
+private boolean isRootArticulation(int root) {
+  Graph.Node ptr = adjList[root].getNext();
+  DFS dfs = new DFS(graph, MAX_VERTICES);
+  int childCount = 0;
+  boolean[] visited = dfs.getVisited();
+  
+  for(; ptr != null; ptr = ptr.getNext()) {
+    if(!visited[ptr.getVertex()]) {
+      childCount++;
+      dfs.dfsIterative(ptr.getVertex());
+    }
+  }
+  
+  if(childCount > 1) return true;
+  else return false;
+}
+```
