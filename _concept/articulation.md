@@ -37,6 +37,24 @@ articulation point가 없는 connected graph
 ### 구현
 - Articulation points를 찾기 위한 dfn 로직  
   (depth-first numbers)
+
+#### Initialization
+
+```java
+public Articulation(Graph graph, int maxVertices) {
+  this.graph = graph;
+  this.adjList = graph.getAdjList();
+  this.dfsCount = 0;
+  this.dfn = new int[maxVertices];
+  this.low = new int[maxVertices];
+  
+  for(int i = 0; i < graph.getSize(); i++) {
+    this.dfn[i] = -1;
+    this.low[i] = -1;
+  }
+}
+```
+
 ```java
 // v is the parent of u
 public void dfnlow(int u, int v) {
@@ -91,7 +109,10 @@ private boolean isRootArticulation(int root) {
   DFS dfs = new DFS(graph, MAX_VERTICES);
   int childCount = 0;
   boolean[] visited = dfs.getVisited();
-  
+  // root node는 방문했다고 체크해야함
+  // root node 기점으로 자식노드 구별해야하기에
+  visited[root] = true;
+
   for(; ptr != null; ptr = ptr.getNext()) {
     if(!visited[ptr.getVertex()]) {
       childCount++;
