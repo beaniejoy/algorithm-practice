@@ -3,9 +3,6 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.StringTokenizer;
 
 public class Baek_11266 {
@@ -14,6 +11,7 @@ public class Baek_11266 {
 		int[] dfn;
 		int[] low;
 		boolean[] visited;
+		boolean[] articulation;
 		Node[] adjList;
 		int dfnCount;
 		
@@ -22,11 +20,12 @@ public class Baek_11266 {
 			dfn = new int[maxSize + 1];
 			low = new int[maxSize + 1];
 			visited = new boolean[maxSize + 1];
-			dfnCount = 1;
+			articulation = new boolean[maxSize + 1];
+			dfnCount = 0;
 			
 			for(int i = 0; i <= maxSize; i++) {
-				this.dfn[i] = -1;
-				this.low[i] = -1;
+				this.dfn[i] = -99;
+				this.low[i] = -99;
 			}
 		}
 		
@@ -35,6 +34,8 @@ public class Baek_11266 {
 				return;
 			
 			adjList[v] = new Node(v, null);
+			dfn[v] = -1;
+			low[v] = -1;
 		}
 		
 		boolean insertEdge(int u, int v) {
@@ -69,12 +70,11 @@ public class Baek_11266 {
 		
 		void dfnlow(int u, int v) {
 			dfn[u] = low[u] = dfnCount++;
-			
 			Node child = adjList[u].getNext();
 			int w;
 			for(; child != null; child = child.getNext()) {
 				w = child.getVertex();
-				if(dfn[w] < 0) {
+				if(dfn[w] == -1) {
 					dfnlow(w, u);
 					low[u] = min(low[u], low[w]);
 				} else if(w != v) {
@@ -93,37 +93,18 @@ public class Baek_11266 {
 			for(; next != null; next = next.getNext()) {
 				int nextVertex = next.getVertex();
 				if(!visited[nextVertex]) {
+					if(dfn[u] > 0 && dfn[u] <= low[nextVertex])
+						articulation[u] = true;
 					dfs(nextVertex);
 				}
 			}
 		}
 		
-		boolean isArticulation(int u) {
-			// root
-			if(dfn[u] == 0)
-				return isRootArticulation(u);
-				
-			// non-root
-			Node next = adjList[u].getNext();
-			int v;
-			for(; next != null; next = next.getNext()) {
-				v = next.getVertex();
-				
-				// 자식노드에만 관심, 부모노드일시 패스
-				if(dfn[u] > dfn[v])
-					continue;
-				
-				if(dfn[u] <= low[v])
-					return true;
-			}
-			
-			return false;
-		}
-		
-		boolean isRootArticulation(int root) {
+		void isArticulation(int root) {
 			visited[root] = true;
 			
 			int childCount = 0;
+			
 			Node child = adjList[root].getNext();
 			for(; child != null; child = child.getNext()) {
 				int childVertex = child.getVertex();
@@ -133,7 +114,8 @@ public class Baek_11266 {
 				}
 			}
 			
-			return childCount >= 2;
+			if(childCount > 1)
+				articulation[root] = true;
 		}
 		
 		private int min(int a, int b) {
@@ -165,60 +147,54 @@ public class Baek_11266 {
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-    StringTokenizer st = new StringTokenizer(br.readLine());
-    
-    int V = Integer.parseInt(st.nextToken());
-    int E = Integer.parseInt(st.nextToken());
-    
-    int u;
-    int v;
-    Graph graph = new Graph(V);
-    
-    for (int i = 0; i < E; i++) {
-      st = new StringTokenizer(br.readLine());
-        u = Integer.parseInt(st.nextToken());
-        v = Integer.parseInt(st.nextToken());
-        
-        graph.insertEdge(u, v);
-    }
-    
-    int artCount = 0;
-    List<Integer> result = new ArrayList<>();
-    for(int i = 1; i <= V; i++) {
-      if(graph.dfn[i] < 0) {
-        graph.dfnCount = 1;
-        graph.dfnlow(i, i);
-        
-        for(int j = 1; j <= V; j++) {
-          if(graph.dfn[j] >= 0 && graph.isArticulation(j)) {
-            
-            if(!result.contains(j)) {
-              result.add(j);
-              artCount++;        					
-            }
-            
-          }
-        }
-      }
-    }
-    StringBuffer sb = new StringBuffer();
-    
-    Collections.sort(result);
-    for(int i = 0; i < result.size(); i++) {
-      if(i != 0)
-        sb.append(" ");
-      
-      sb.append(result.get(i));
-    }
-    
-    bw.write(String.valueOf(artCount));
-    if(artCount > 0) {
-      bw.newLine();
-      bw.write(sb.toString());
-    }
-    bw.flush();
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		
+		int V = Integer.parseInt(st.nextToken());
+		int E = Integer.parseInt(st.nextToken());
+		
+		int u;
+		int v;
+		Graph graph = new Graph(V);
+		
+		for (int i = 0; i < E; i++) {
+			st = new StringTokenizer(br.readLine());
+				u = Integer.parseInt(st.nextToken());
+				v = Integer.parseInt(st.nextToken());
+				
+				graph.insertEdge(u, v);
+		}
+		
+		for(int i = 1; i <= V; i++) {
+			if(graph.dfn[i] == -1) {
+				graph.dfnCount = 0;
+				graph.dfnlow(i, i);
+				graph.isArticulation(i);
+			}
+		}
+		
+		StringBuffer sb = new StringBuffer();
+		int artCount = 0;
+		
+		for(int i = 1; i <= V; i++) {
+			if(graph.articulation[i]) {
+				artCount++;
+				
+				sb.append(i);
+				sb.append(" ");
+			}
+		}
+		
+		bw.write(String.valueOf(artCount));
+		if(artCount > 0) {
+			bw.newLine();
+			sb.deleteCharAt(sb.lastIndexOf(" "));
+			bw.write(sb.toString());
+		}
+		
+		bw.flush();
 
-    bw.close();
-    br.close();
+		bw.close();
+		br.close();
 	}
+	
 }
