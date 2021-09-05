@@ -3,10 +3,6 @@
 - 단절점
 - 특정 point가 없어졌을 때 두 개 이상의 Connected Graph로 나뉘는 점을 단절점
 
-## Biconnected graph
-
-articulation point가 없는 connected graph
-
 ## 구하는 방법
 
 ### depth-first numbers
