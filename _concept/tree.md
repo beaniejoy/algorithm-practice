@@ -24,7 +24,7 @@ void connected() {
 
 <img width="333" alt="스크린샷 2021-09-05 오후 11 50 41" src="https://user-images.githubusercontent.com/41675375/132131308-4e25dcdb-a563-4b47-a555-f2c697264001.png">
 
-- articulation point가 없는 Connected Graph
+- [articulation point](https://github.com/beaniejoy/algorithm-skillUp/blob/main/_concept/articulation.md)가 없는 Connected Graph
 
 ## Spanning Tree
 
