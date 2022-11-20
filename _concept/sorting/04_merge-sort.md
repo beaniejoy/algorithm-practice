@@ -3,7 +3,7 @@
 ```java
 public class MergeSort {
   
-  public static void mergeSort(int[] total, int len) {
+  public static void mergeSplit(int[] total, int len) {
     // length가 1이 되었을 때 split 종료
     if(len < 2) {
       return;
@@ -13,7 +13,7 @@ public class MergeSort {
 		// left, right 배열을 따로 만든다.
     int mid = len / 2;
     int[] left = new int[mid];
-    int[] right = new int[n - mid];
+    int[] right = new int[len - mid];
 
     // left 부분 쪼개기
     for(int i = 0; i < mid; i++) {
@@ -21,17 +21,17 @@ public class MergeSort {
     }
 
     // right 부분 쪼개기
-    for(int i = mid; i < n; i++) {
-      right[i - mid] = total[i]
+    for(int i = mid; i < len; i++) {
+      right[i - mid] = total[i];
     }
 
     // left and right spliting
-    mergeSort(left, mid);
-    mergeSort(right, n - mid);
+    mergeSplit(left, mid);
+    mergeSplit(right, len - mid);
 
     // after spliting complete,
     // merge left and right list
-    merge(total, left, right, mid, n - mid);
+    merge(total, left, right, mid, len - mid);
   }
 
   // parameter: left, right > index 자리넘버가 아닌 list의 요소 개수
